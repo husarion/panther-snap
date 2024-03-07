@@ -22,7 +22,7 @@ package-repositories:
 apps:
   panther-ros:
     command: usr/bin/launcher.sh
-    plugs: [network, network-bind, spi, gpio-control, raw-usb, system-observe]
+    plugs: [network, network-bind, spi, gpio-control, raw-usb, system-observe, can-bus]
     environment:
       LD_LIBRARY_PATH: "$LD_LIBRARY_PATH:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/blas:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/lapack"
     extensions: [ros2-humble]
@@ -31,7 +31,7 @@ parts:
   panther-ros:
     plugin: colcon
     source: https://github.com/husarion/panther_ros.git
-    source-branch: ros2-snap-dev
+    source-branch: ros2-devel
     build-packages:
       - git
       - python3-vcstool
