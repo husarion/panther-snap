@@ -15,14 +15,10 @@ architectures:
 # Later to be parsed from git repo
 version: "0.0.1"
 
-package-repositories:
- - type: apt
-   ppa: lely/ppa
-
 apps:
   panther-ros:
     command: usr/bin/launcher.sh
-    plugs: [network, network-bind, spi, gpio-control, raw-usb, system-observe, can-bus]
+    plugs: [network, network-bind, spi, raw-usb, system-observe, can-bus, custom-device, gpiochip]
     environment:
       LD_LIBRARY_PATH: "$LD_LIBRARY_PATH:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/blas:$SNAP/usr/lib/$SNAPCRAFT_ARCH_TRIPLET/lapack"
     extensions: [ros2-humble]
@@ -34,6 +30,7 @@ parts:
     source-branch: ros2-devel
     build-packages:
       - git
+      - build-essential
       - python3-vcstool
     override-pull: |
 
@@ -46,22 +43,15 @@ parts:
       touch $CRAFT_PART_SRC/panther_gazebo/COLCON_IGNORE
 
     stage-packages: [ros-humble-ros2launch]
-    after: [lely]
-
-  # later to be removed probably with package-repositories
-  lely:
-    plugin: nil
-    build-packages:
-      - software-properties-common
-      - liblely-coapp-dev
-      - liblely-co-tools
-      - python3-dcf-tools
-    stage-packages:
-      - liblely-coapp-dev
 
   # copy local scripts to the snap usr/bin
   local-files:
     plugin: dump
     source: snap/local/
     organize:
-      '*.sh': usr/bin/
+      "*.sh": usr/bin/
+
+plugs:
+  gpiochip:
+    interface: custom-device
+    custom-device: gpiochip
